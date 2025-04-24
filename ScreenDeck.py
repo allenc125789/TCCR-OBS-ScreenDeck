@@ -4,10 +4,14 @@ import subprocess
 import errno
 import os
 import time
+import tomllib as toml
 import obsws_python as obs
 
+
+#Groupsare treated as scenes in obsws
+
 if os.getenv('VIRTUAL_ENV') is None:
-    print("[ERROR] This script must be run in a virtual environment, with obsws_python installed.")
+    print("[ERROR] This script must be run in a virtual environment.")
     print("[HINT] `source ./.venv/bin/activate`.")
     exit()
 
@@ -39,6 +43,13 @@ def startStream():
     else:
         pass
 
+def obswsHelp():
+    cl = obs.ReqClient()
+    cl.get_scene_list()
+    print("Cam1")
+#    cl.set_scene_item_enabled(scene_name="Main", item_id="CAM1", enabled=False)
+#    sourceCAM1
+
 def stopStream():
     global statusLive
     if (statusLive == True):
@@ -49,6 +60,20 @@ def stopStream():
         cl.set_current_program_scene("Off")
     else:
         pass
+
+def standBy():
+    cl = obs.ReqClient()
+    cl.set_current_program_scene("Stand-By")
+
+def CAM1():
+    cl = obs.ReqClient()
+    cl.get_scene_list()
+    print("Cam1")
+#    sceneItems = cl.get_scene_item_id(scene_name="CAM1", source_name="Camera1")
+#    sceneItems
+    cl.set_scene_item_enabled(scene_name="Main", item_id=29, enabled=False)
+
+
 
 
 def resetTitle():
@@ -129,14 +154,14 @@ def tkrender():
     var1=tk.IntVar()
 
     #cbOnline/cbOffline frame.
-    fState = tk.Frame(fColumn, width=228, height=50)
-    fState.grid(row=0, column=0, sticky=tk.W+tk.E)
+    fState = tk.Frame(fColumn, width=228, height=20)
+    fState.grid(row=0, column=0, sticky=tk.W+tk.E, padx=75)
     #Checkboxs to change stream from live-to-offline.
     cbOnline = tk.Checkbutton(fState, text='Online', variable=var1, offvalue=(not statusLive), command=startStream)
     cbOffline = tk.Checkbutton(fState, text='Offline', variable=var1, onvalue=statusLive, command=stopStream)
     #Label for Stream State
     lState = tk.Label(fColumn, text="Stream Status:", font=("Aerial", 30, "bold"))
-    lState.grid(row=0, column=0, sticky=tk.W+tk.E, padx=100)
+    lState.grid(row=0, column=0, sticky=tk.W+tk.E, padx=150)
 
 
     #Textbox for the Stream's Title.
@@ -153,15 +178,15 @@ def tkrender():
     lTitle.grid(row=2, column=0, sticky=tk.W+tk.E)
 
 
-    #checkboxes for cameras.
-    cbStandBy = tk.Checkbutton(fColumn, text='Stand-by...',  font=("Aerial", 10, "bold"))
-    cbStandBy.grid(row=5, column=0, sticky=tk.W+tk.E)
-    cbCam1 = tk.Checkbutton(fColumn, text='Cam 1')
-    cbCam1.grid(row=6, column=0, sticky=tk.W+tk.E)
-    cbCam2 = tk.Checkbutton(fColumn, text='Cam 2')
-    cbCam2.grid(row=7, column=0, sticky=tk.W+tk.E)
-    cbCam3 = tk.Checkbutton(fColumn, text='Cam 3')
-    cbCam3.grid(row=8, column=0, sticky=tk.W+tk.E)
+    #Buttons for cameras.
+    btnStandBy = tk.Button(fColumn, text='Stand-by...',  font=("Aerial", 10, "bold"), command=standBy)
+    btnStandBy.grid(row=5, column=0, sticky=tk.W+tk.E)
+    btnCam1 = tk.Button(fColumn, text='Cam 1', command=CAM1)
+    btnCam1.grid(row=6, column=0, sticky=tk.W+tk.E)
+    btnCam2 = tk.Button(fColumn, text='Cam 2')
+    btnCam2.grid(row=7, column=0, sticky=tk.W+tk.E)
+    btnCam3 = tk.Button(fColumn, text='Cam 3')
+    btnCam3.grid(row=8, column=0, sticky=tk.W+tk.E)
 
 
     #Buttons for Timer.
@@ -227,6 +252,7 @@ def main():
     execGopro()
     execOBS()
     time.sleep(2)
+    obswsHelp()
     tkrender()
 
 if __name__ == "__main__":
