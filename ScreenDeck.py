@@ -4,13 +4,81 @@ import subprocess
 import errno
 import os
 import time
+import obsws_python as obs
+
+if os.getenv('VIRTUAL_ENV') is None:
+    print("[ERROR] This script must be run in a virtual environment.")
+    print("[HINT] `source ./.venv/bin/activate`.")
+    exit()
 
 subprocess.run(['/usr/bin/sudo', '/usr/bin/whoami'])
 
 goprogram = subprocess.Popen(['/usr/bin/sudo', '/usr/local/sbin/gopro', 'webcam', '-p', 'enx', '-n', '-a'])
-time.sleep(15)
-obsprogram = subprocess.Popen(['/usr/bin/obs'])
+time.sleep(16)
+obsprogram = subprocess.Popen(['/usr/bin/obs', '>', '/dev/null'])
+
 root = tk.Tk()
+fColumn = tk.Frame(root)
+tbTitle = tk.Text(fColumn, height=3, width=60)
+
+#Sys vars, don't change.
+titleText = ""
+statusLive = False
+
+
+def startStream():
+    global statusLive
+    global tbTitle
+    if (statusLive == False):
+        statusLive = True
+        cl = obs.ReqClient()
+        cl.set_current_program_scene("Trans-In")
+        time.sleep(21)
+        cl.set_current_program_scene("Stand-By")
+        tbTitle.insert('1.0', titleText)
+    else:
+        pass
+
+def stopStream():
+    global statusLive
+    if (statusLive == True):
+        statusLive = False
+        cl = obs.ReqClient()
+        cl.set_current_program_scene("Trans-Out")
+        time.sleep(21)
+        cl.set_current_program_scene("Off")
+    else:
+        pass
+
+
+def resetTitle():
+    global titleText
+    global fColumn
+    global tbTitle
+    try:
+        f = open("title.txt", "r")
+        titleText = f.read()
+        tbTitle.delete("1.0", tk.END)
+        tbTitle.insert("1.0", titleText)
+        f.close
+    except:
+        with open("title.txt", "w") as f:
+            titleText = "           TCC, Tulsa Community College Robotics            |            Event: XXXXX: 04-08-2025             |            "
+            f.write(titleText)
+            tbTitle.insert("1.0", titleText)
+            pass
+
+def saveTitle():
+    global fColumn
+    global tbTitle
+    titleText = tbTitle.get("1.0", tk.END)
+    tbTitle.delete("1.0", tk.END)
+    with open("title.txt", "w") as f:
+        f.write(titleText)
+        f.close
+    tbTitle.delete("1.0", tk.END)
+    tbTitle.insert("1.0", titleText)
+
 
 
 def safeExit():
@@ -33,41 +101,56 @@ def safeExit():
     #Stops tkinter
     root.quit()
 
+def disableEvent():
+    pass
 
 def tkrender():
     global root
+    global fColumn
+    global tbTitle
+    root.protocol("WM_DELETE_WINDOW", disableEvent)
     root.title('TCCR OBS ScreenDeck')
-    root.geometry("800x350")
+    w = 775
+    h = 375
 
+    ws = root.winfo_screenwidth() # width of the screen
+    hs = root.winfo_screenheight() # height of the screen
+
+    x = (ws) - (w*4)
+    y = (hs) - (h/4)
+
+    # set the dimensions of the screen
+    # and where it is placed
+    root.geometry('%dx%d+%d+%d' % (w, h, x, y))
     #Frame for Column
-    fColumn = tk.Frame(root)
     fColumn.columnconfigure(0, weight=1)
     fColumn.columnconfigure(1, weight=1)
 
+    var1=tk.IntVar()
 
-    #Label for Stream State
-    lState = tk.Label(fColumn, text="Stream Offline", font=("Aerial", 30, "bold"))
-    lState.grid(row=0, column=0, sticky=tk.W+tk.E)
     #cbOnline/cbOffline frame.
     fState = tk.Frame(fColumn, width=228, height=50)
-    fState.grid(row=1, column=0, sticky=tk.W+tk.E)
+    fState.grid(row=0, column=0, sticky=tk.W+tk.E)
     #Checkboxs to change stream from live-to-offline.
-    cbOnline = tk.Checkbutton(fState, text='Online')
-    cbOffline = tk.Checkbutton(fState, text='Offline')
+    cbOnline = tk.Checkbutton(fState, text='Online', variable=var1, offvalue=(not statusLive), command=startStream)
+    cbOffline = tk.Checkbutton(fState, text='Offline', variable=var1, onvalue=statusLive, command=stopStream)
+    #Label for Stream State
+    lState = tk.Label(fColumn, text="Stream Status:", font=("Aerial", 30, "bold"))
+    lState.grid(row=0, column=0, sticky=tk.W+tk.E, padx=100)
 
 
-    #Label for tbTitle.
-    lTitle = tk.Label(fColumn, text="Stream Title")
-    lTitle.grid(row=2, column=0, sticky=tk.W+tk.E)
     #Textbox for the Stream's Title.
-    tbTitle = tk.Text(fColumn, height=2, width=50)
     tbTitle.grid(row=3, column=0, sticky=tk.W+tk.E)
+    resetTitle()
     #btnTitle* frame.
     fTitle = tk.Frame(fColumn, width=228, height=50)
     fTitle.grid(row=4, column=0, sticky=tk.W+tk.E)
     #Buttons for saving/reverting tbTitle.
-    btnTitleReset = tk.Button(fTitle, text='Reset')
-    btnTitleSave = tk.Button(fTitle, text='Save')
+    btnTitleReset = tk.Button(fTitle, text='Reset', command=resetTitle)
+    btnTitleSave = tk.Button(fTitle, text='Save', command=saveTitle)
+    #Label for tbTitle.
+    lTitle = tk.Label(fColumn, text="Stream Title")
+    lTitle.grid(row=2, column=0, sticky=tk.W+tk.E)
 
 
     #checkboxes for cameras.
@@ -91,8 +174,7 @@ def tkrender():
 
     #Button for safe exit.
     btnSafeExit = tk.Button(fColumn, text='Safe Exit', font=("Aerial", 10, "bold"), command=safeExit)
-    btnSafeExit.grid(row=20, column=1, sticky=tk.W+tk.E)
-
+    btnSafeExit.grid(row=23, column=1, sticky=tk.W+tk.E)
 
     ###Packing/rendering into main window.
     #Online/Offline Function.
@@ -100,8 +182,8 @@ def tkrender():
 
 
     #Checkboxes for Online/Offline Stream.
-    cbOffline.pack(side="bottom", anchor="w")
-    cbOnline.pack(side="top", anchor="w")
+    cbOffline.pack(side="bottom", anchor="e")
+    cbOnline.pack(side="top", anchor="e")
 
     #Timer Function.
     lTimer.pack()
@@ -146,7 +228,6 @@ def main():
     execOBS()
     time.sleep(2)
     tkrender()
-
 
 if __name__ == "__main__":
     main()
