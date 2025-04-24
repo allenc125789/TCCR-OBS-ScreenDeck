@@ -7,7 +7,7 @@ import time
 import obsws_python as obs
 
 if os.getenv('VIRTUAL_ENV') is None:
-    print("[ERROR] This script must be run in a virtual environment.")
+    print("[ERROR] This script must be run in a virtual environment, with obsws_python installed.")
     print("[HINT] `source ./.venv/bin/activate`.")
     exit()
 
