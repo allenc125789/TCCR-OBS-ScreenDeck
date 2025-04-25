@@ -1,4 +1,6 @@
-A school project i'm sharing on github. I'm in my school's Combat Robotics Club, and have been tasked with making the live-stream look nice and proffesional, thanks to having previous experience with OBS and live-stream production.
+A school project i'm sharing on github.
+
+I'm in my school's Combat Robotics Club, and have been tasked with making the live-stream look nice and proffesional, thanks to having previous experience with OBS and live-stream production.
 
 I took it a few steps up, and scripted my own OBS control panel! Gives a GUI with the ability to control multiple sources, scenes, and effects more consistently and efficiently than the standard OBS UI.
 
