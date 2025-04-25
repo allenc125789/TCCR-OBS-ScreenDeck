@@ -8,7 +8,8 @@ import tomllib as toml
 import obsws_python as obs
 
 
-#Groupsare treated as scenes in obsws
+#The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.
+#Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.
 
 if os.getenv('VIRTUAL_ENV') is None:
     print("[ERROR] This script must be run in a virtual environment.")
@@ -22,33 +23,38 @@ time.sleep(16)
 obsprogram = subprocess.Popen(['/usr/bin/obs', '>', '/dev/null'])
 
 root = tk.Tk()
+rootWarn = tk.Toplevel(root)
+rootWarn.destroy()
 fColumn = tk.Frame(root)
 tbTitle = tk.Text(fColumn, height=3, width=60)
 
 #Sys vars, don't change.
 titleText = ""
 statusLive = False
+sourceCAM1 = False
+sourceTimer = False
+sourceTimerStart = False
 
+def resetSysVars():
+    cl = obs.ReqClient()
+    sourceCAM1 = False
+    cl.set_scene_item_enabled(scene_name="Main", item_id=29, enabled=False)
+    sourceTimer = False
+    cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=False)
+    sourceTimerStart = False
+    cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=False)
 
 def startStream():
     global statusLive
-    global tbTitle
+    resetSysVars()
     if (statusLive == False):
         statusLive = True
         cl = obs.ReqClient()
         cl.set_current_program_scene("Trans-In")
         time.sleep(21)
         cl.set_current_program_scene("Stand-By")
-        tbTitle.insert('1.0', titleText)
     else:
         pass
-
-def obswsHelp():
-    cl = obs.ReqClient()
-    cl.get_scene_list()
-    print("Cam1")
-#    cl.set_scene_item_enabled(scene_name="Main", item_id="CAM1", enabled=False)
-#    sourceCAM1
 
 def stopStream():
     global statusLive
@@ -67,12 +73,35 @@ def standBy():
 
 def CAM1():
     cl = obs.ReqClient()
-    cl.get_scene_list()
-    print("Cam1")
-#    sceneItems = cl.get_scene_item_id(scene_name="CAM1", source_name="Camera1")
-#    sceneItems
-    cl.set_scene_item_enabled(scene_name="Main", item_id=29, enabled=False)
+    #CAM1
+    cl.set_current_program_scene("Main")
+    cl.set_scene_item_enabled(scene_name="Main", item_id=29, enabled=True)
 
+def timerHideShow():
+    global sourceTimer
+    global sourceTimerStart
+    cl = obs.ReqClient()
+    if (sourceTimerStart == True):
+        #TimerStart
+        sourceTimerStart = False
+        cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=False)
+        time.sleep(1)
+    #Timer
+    sourceTimer = (not sourceTimer)
+    cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=sourceTimer)
+
+def timerStart():
+    global sourceTimer
+    global sourceTimerStart
+    cl = obs.ReqClient()
+    if (sourceTimer != True):
+        #Timer
+        sourceTimer = True
+        cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=True)
+        time.sleep(1)
+    #TimerStart
+    sourceTimerStart = (not sourceTimerStart)
+    cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=sourceTimerStart)
 
 
 
@@ -84,7 +113,7 @@ def resetTitle():
         f = open("title.txt", "r")
         titleText = f.read()
         tbTitle.delete("1.0", tk.END)
-        tbTitle.insert("1.0", titleText)
+        WbTitle.insert("1.0", titleText)
         f.close
     except:
         with open("title.txt", "w") as f:
@@ -97,12 +126,9 @@ def saveTitle():
     global fColumn
     global tbTitle
     titleText = tbTitle.get("1.0", tk.END)
-    tbTitle.delete("1.0", tk.END)
     with open("title.txt", "w") as f:
         f.write(titleText)
         f.close
-    tbTitle.delete("1.0", tk.END)
-    tbTitle.insert("1.0", titleText)
 
 
 
@@ -128,6 +154,42 @@ def safeExit():
 
 def disableEvent():
     pass
+
+def closeWarning():
+    global rootWarn
+    rootWarn.destroy()
+    safeExit()
+
+def tkrenderWarning():
+    global root
+    global statusLive
+    global rootWarn
+    if (statusLive == True):
+        rootWarn = tk.Toplevel(root)
+        rootWarn.protocol("WM_DELETE_WINDOW", disableEvent)
+        rootWarn.title('WARNING!')
+        w = 775
+        h = 375
+
+        ws = rootWarn.winfo_screenwidth() # width of the screen
+        hs = rootWarn.winfo_screenheight() # height of the screen
+
+        x = (ws) - (w*4)
+        y = (hs) - (h/4)
+
+        rootWarn.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        lWarning = tk.Label(rootWarn, text="Waning!", font=("Aerial", 30, "bold"))
+        lDescription = tk.Label(rootWarn, text="The Livestream is still online. Are you sure you want to Exit now?")
+        btnContinue = tk.Button(rootWarn, text='Continue?', command=closeWarning)
+        btnGoBack = tk.Button(rootWarn, text='Go back!', command=rootWarn.destroy)
+
+        lWarning.pack()
+        lDescription.pack()
+        btnContinue.pack()
+        btnGoBack.pack()
+
+    else:
+        safeExit()
 
 def tkrender():
     global root
@@ -193,12 +255,12 @@ def tkrender():
     fTimer = tk.Frame(fColumn, width=228, height=50, borderwidth=2, relief="solid")
     fTimer.grid(row=0, column=1, sticky=tk.W+tk.E)
     lTimer = tk.Label(fTimer, text="+Battle Timer+", font=("Aerial", 10, "bold"))
-    btnShowHide = tk.Button(fTimer, text='Hide/Show')
-    btnStopStart = tk.Button(fTimer, text='Start/Stop')
+    btnShowHide = tk.Button(fTimer, text='Hide/Show', command=timerHideShow)
+    btnStopStart = tk.Button(fTimer, text='Start/Stop', command=timerStart)
 
 
     #Button for safe exit.
-    btnSafeExit = tk.Button(fColumn, text='Safe Exit', font=("Aerial", 10, "bold"), command=safeExit)
+    btnSafeExit = tk.Button(fColumn, text='Safe Exit', font=("Aerial", 10, "bold"), command=tkrenderWarning)
     btnSafeExit.grid(row=23, column=1, sticky=tk.W+tk.E)
 
     ###Packing/rendering into main window.
@@ -250,9 +312,9 @@ def execOBS():
 
 def main():
     execGopro()
-    execOBS()
+#    execOBS()
     time.sleep(2)
-    obswsHelp()
+    resetSysVars()
     tkrender()
 
 if __name__ == "__main__":
