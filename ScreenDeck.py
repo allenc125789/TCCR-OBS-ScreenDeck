@@ -7,12 +7,14 @@ import time
 import tomllib as toml
 import obsws_python as obs
 
-# Script by Allen Carson.
-# https://github.com/allenc125789/TCCR-OBS-ScreenDeck
+###############################################################################################################################################
+# Script by Allen Carson.                                                                                                                     #
+# https://github.com/allenc125789/TCCR-OBS-ScreenDeck                                                                                         #
+#                                                                                                                                             #
+# SELF NOTE: The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.                             #
+#     Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.#
+###############################################################################################################################################
 
-
-#The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.
-#Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.
 
 #Check for virtual env.
 if os.getenv('VIRTUAL_ENV') is None:
@@ -44,6 +46,7 @@ sourceCAM1 = False
 sourceTimer = False
 sourceTimerStart = False
 
+#Resets sysvars to default on when livestream is online or when program is opened.
 def resetSysVars():
     cl = obs.ReqClient()
     sourceCAM1 = False
@@ -53,6 +56,7 @@ def resetSysVars():
     sourceTimerStart = False
     cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=False)
 
+#Starts the livestream, sets as online.
 def startStream():
     global statusLive
     resetSysVars()
@@ -65,6 +69,7 @@ def startStream():
     else:
         pass
 
+#Stops the livestream, sets as offline.
 def stopStream():
     global statusLive
     if (statusLive == True):
@@ -76,16 +81,19 @@ def stopStream():
     else:
         pass
 
+#Set scene to 'Stand-By'
 def standBy():
     cl = obs.ReqClient()
     cl.set_current_program_scene("Stand-By")
 
+#Set scene to 'Main', activates group 'CAM1'.
 def CAM1():
     cl = obs.ReqClient()
     #CAM1
     cl.set_current_program_scene("Main")
     cl.set_scene_item_enabled(scene_name="Main", item_id=29, enabled=True)
 
+#Set scene to 'Main', activates group 'Timer-Ready'.
 def timerHideShow():
     global sourceTimer
     global sourceTimerStart
@@ -99,6 +107,7 @@ def timerHideShow():
     sourceTimer = (not sourceTimer)
     cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=sourceTimer)
 
+#Set scene to 'Main', activates group 'Timer-Start'.
 def timerStart():
     global sourceTimer
     global sourceTimerStart
