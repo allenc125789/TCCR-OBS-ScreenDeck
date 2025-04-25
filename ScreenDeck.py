@@ -14,6 +14,7 @@ import obsws_python as obs
 #The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.
 #Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.
 
+#Check for virtual env.
 if os.getenv('VIRTUAL_ENV') is None:
     print("[ERROR] This script must be run in a virtual environment.")
     print("[HINT] `source ./.venv/bin/activate`.")
@@ -27,13 +28,16 @@ goprogram = subprocess.Popen(['/usr/bin/sudo', '/usr/local/sbin/gopro', 'webcam'
 time.sleep(16)
 obsprogram = subprocess.Popen(['/usr/bin/obs', '>', '/dev/null'])
 
+
+
+##Sys vars, don't change.
+#tkinter
 root = tk.Tk()
 rootWarn = tk.Toplevel(root)
 rootWarn.destroy()
 fColumn = tk.Frame(root)
 tbTitle = tk.Text(fColumn, height=3, width=60)
-
-#Sys vars, don't change.
+#OBS
 titleText = ""
 statusLive = False
 sourceCAM1 = False
@@ -109,7 +113,7 @@ def timerStart():
     cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=sourceTimerStart)
 
 
-
+#Resets the title textbox to what's saved in the file. If none is there, one will be created.
 def resetTitle():
     global titleText
     global fColumn
@@ -127,6 +131,7 @@ def resetTitle():
             tbTitle.insert("1.0", titleText)
             pass
 
+#Saves what's in the current textbox to file.
 def saveTitle():
     global fColumn
     global tbTitle
@@ -136,7 +141,7 @@ def saveTitle():
         f.close
 
 
-
+#Performs a safe exit, that terminates all child services.
 def safeExit():
     #Stops obs
     obsprogram.terminate()
@@ -160,11 +165,13 @@ def safeExit():
 def disableEvent():
     pass
 
+#Closes the Warning window by `tkrenderWarning`.
 def closeWarning():
     global rootWarn
     rootWarn.destroy()
     safeExit()
 
+#Renders warning window for closing the program while the livestream is online.
 def tkrenderWarning():
     global root
     global statusLive
@@ -194,10 +201,10 @@ def tkrenderWarning():
         btnGoBack.pack()
         rootWarn.grab_set()
         root.wait_window(rootWarn)
-
     else:
         safeExit()
 
+#Renders control panel window for OBS
 def tkrender():
     global root
     global fColumn
@@ -292,6 +299,7 @@ def tkrender():
     #Start root GUI window.
     root.mainloop()
 
+#Main Loop
 def main():
     time.sleep(2)
     resetSysVars()
