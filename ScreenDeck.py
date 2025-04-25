@@ -7,6 +7,9 @@ import time
 import tomllib as toml
 import obsws_python as obs
 
+# Script by Allen Carson.
+# https://github.com/allenc125789/TCCR-OBS-ScreenDeck/tree/main
+
 
 #The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.
 #Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.
