@@ -56,7 +56,7 @@ def startStream():
         statusLive = True
         cl = obs.ReqClient()
         cl.set_current_program_scene("Trans-In")
-        time.sleep(21)
+        time.sleep(19)
         cl.set_current_program_scene("Stand-By")
     else:
         pass
