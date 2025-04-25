@@ -4,7 +4,7 @@ I'm in my school's Combat Robotics Club, and have been tasked with making the li
 
 I took it a few steps up, and scripted my own OBS control panel! This script has 2 main benefits:
 
-- A custom UI with the ability to control multiple sources, scenes, and effects more consistently and efficiently than the standard OBS setup.
+- A custom UI with the ability to control multiple sources, scenes, and effects more consistently and efficiently than the standard OBS scene/source layout.
 - Makes it very easy for other's in the group that are new to OBS, or don't know how to work my specific OBS scene setup, to control the livestream.
 
 Dependancies:
