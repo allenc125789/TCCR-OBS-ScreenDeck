@@ -1,8 +1,6 @@
-import tkinter as tk
-import getpass
-import subprocess
-import errno
 import os
+import tkinter as tk
+import subprocess
 import time
 import tomllib as toml
 import obsws_python as obs
@@ -15,22 +13,14 @@ import obsws_python as obs
 #     Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.#
 ###############################################################################################################################################
 
-
-#Check for virtual env.
-if os.getenv('VIRTUAL_ENV') is None:
-    print("[ERROR] This script must be run in a virtual environment.")
-    print("[HINT] `source ./.venv/bin/activate`.")
-    exit()
-
-subprocess.run(['/usr/bin/sudo', '/usr/bin/whoami'])
-
+###Prepare
 #For Linux Systems. Calls the program "gopro_as_webcam_on_linux" by jschmid1.
 #https://github.com/jschmid1/gopro_as_webcam_on_linux
 goprogram = subprocess.Popen(['/usr/bin/sudo', '/usr/local/sbin/gopro', 'webcam', '-p', 'enx', '-n', '-a'])
+#Waits for cameras to connect...
 time.sleep(16)
+#Starts OBS.
 obsprogram = subprocess.Popen(['/usr/bin/obs', '>', '/dev/null'])
-
-
 
 ##Sys vars, don't change.
 #tkinter
@@ -45,6 +35,10 @@ statusLive = False
 sourceCAM1 = False
 sourceTimer = False
 sourceTimerStart = False
+
+###Functions
+def disableEvent():
+    pass
 
 #Resets sysvars to default on when livestream is online or when program is opened.
 def resetSysVars():
@@ -171,9 +165,6 @@ def safeExit():
     #Stops tkinter
     root.quit()
 
-def disableEvent():
-    pass
-
 #Closes the Warning window by `tkrenderWarning`.
 def closeWarning():
     global rootWarn
@@ -200,7 +191,7 @@ def tkrenderWarning():
 
         rootWarn.geometry('%dx%d+%d+%d' % (w, h, x, y))
         lWarning = tk.Label(rootWarn, text="Waning!", font=("Aerial", 30, "bold"))
-        lDescription = tk.Label(rootWarn, text="The Livestream is still online. Are you sure you want to Exit now?")
+        lDescription = tk.Label(rootWarn, text="The Livestream is still online. Are you sure you want to Exit now?", font=("Aerial", 10, "bold"))
         btnContinue = tk.Button(rootWarn, text='Continue?', command=closeWarning)
         btnGoBack = tk.Button(rootWarn, text='Go back!', command=rootWarn.destroy)
 
