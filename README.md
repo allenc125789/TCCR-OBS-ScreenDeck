@@ -1,7 +1,7 @@
 
 ## Description
 
-A school project i'm sharing on github.
+A school project i'm sharing on github, for other's research.
 
 I'm in my school's Combat Robotics Club, and have been tasked with making the live-stream look nice and proffesional, thanks to having previous experience with OBS and live-stream production. I made this script to help!
 
