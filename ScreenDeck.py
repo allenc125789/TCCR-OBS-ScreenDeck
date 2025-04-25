@@ -8,7 +8,7 @@ import tomllib as toml
 import obsws_python as obs
 
 # Script by Allen Carson.
-# https://github.com/allenc125789/TCCR-OBS-ScreenDeck/tree/main
+# https://github.com/allenc125789/TCCR-OBS-ScreenDeck
 
 
 #The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.
