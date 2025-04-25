@@ -3,7 +3,7 @@
 
 A school project i'm sharing on github.
 
-I'm in my school's Combat Robotics Club, and have been tasked with making the live-stream look nice and proffesional, thanks to having previous experience with OBS and live-stream production. I made this script to help!
+I'm in my school's Combat Robotics Club, and have been tasked with making the live-stream look nice and professional, thanks to having previous experience with OBS and live-stream production. I made this script to help!
 
 This script has 2 main benefits:
 
