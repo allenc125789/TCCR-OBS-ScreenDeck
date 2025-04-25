@@ -18,6 +18,8 @@ if os.getenv('VIRTUAL_ENV') is None:
 
 subprocess.run(['/usr/bin/sudo', '/usr/bin/whoami'])
 
+#For Linux Systems. Calls the program "gopro_as_webcam_on_linux" by jschmid1.
+#https://github.com/jschmid1/gopro_as_webcam_on_linux
 goprogram = subprocess.Popen(['/usr/bin/sudo', '/usr/local/sbin/gopro', 'webcam', '-p', 'enx', '-n', '-a'])
 time.sleep(16)
 obsprogram = subprocess.Popen(['/usr/bin/obs', '>', '/dev/null'])
@@ -187,6 +189,8 @@ def tkrenderWarning():
         lDescription.pack()
         btnContinue.pack()
         btnGoBack.pack()
+        rootWarn.grab_set()
+        root.wait_window(rootWarn)
 
     else:
         safeExit()
@@ -285,34 +289,7 @@ def tkrender():
     #Start root GUI window.
     root.mainloop()
 
-def execGopro():
-       #For Linux Systems. Calls the program "gopro_as_webcam_on_linux" by jschmid1.
-       #https://github.com/jschmid1/gopro_as_webcam_on_linux
-       try:
-           global goprogram
-       except goprogram.CalledProcessError as e:
-           print(
-           """\n\n[ERROR] Failed to open gopro. Please make sure you have:
-             1) Connected your gopro (The gopro will say 'USB connected')
-             \t Tip 1: Turn off gopro, unplug, turn on, plug back in after full gopro boot.
-             \t Tip 2: Try a different/better USB cable.
-             2) Installed the program:
-             \t 'https://github.com/jschmid1/gopro_as_webcam_on_linux'
-             3) You have a gopro 8+""")
-           exit()
-
-def execOBS():
-       try:
-           global obsprogram
-       except obsprogram.CalledProcessError as e:
-           username = getpass.getuser()
-           print("\n\n[ERROR] Failed to open OBS")
-           exit()
-
-
 def main():
-    execGopro()
-#    execOBS()
     time.sleep(2)
     resetSysVars()
     tkrender()
