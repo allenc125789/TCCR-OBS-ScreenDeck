@@ -9,8 +9,7 @@ I took it a few steps up, and scripted my own OBS control panel! This script has
 
 - A custom UI with the ability to control multiple sources, scenes, and effects more consistently and efficiently than the standard OBS scene/source layout.
 - Very easy to control for someone new to OBS or doesn't know my specific scene setup
-____
 
-### Dependancies:
+## Dependancies:
 + obsws (https://pypi.org/project/obsws-python/)
 + gopro_as_webcam_on_linux (https://github.com/jschmid1/)
