@@ -19,3 +19,5 @@ This script has 2 main benefits:
 + Add a match/round counter, one that has 2 buttons, for making the round go up or down, then a third button to hide/show it.
 
 + Add a name vs name section, with a red and blue bar background, for the bots battling. make a little red and blue pixel bot to put on the either side of it.
+
++ add transition between cams
