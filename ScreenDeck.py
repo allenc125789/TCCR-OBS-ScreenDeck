@@ -29,6 +29,7 @@ rootWarn = tk.Toplevel(root)
 rootWarn.destroy()
 fColumn = tk.Frame(root)
 tbTitle = tk.Text(fColumn, height=3, width=60)
+tbRoundCount = tk.Text(fColumn, height=1, width=3)
 #OBS
 titleText = ""
 statusLive = False
