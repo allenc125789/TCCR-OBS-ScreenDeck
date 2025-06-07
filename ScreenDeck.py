@@ -6,7 +6,7 @@ import tomllib as toml
 import obsws_python as obs
 
 ###############################################################################################################################################
-# Script by Allen Carson. Free for using and researching.                                                                                     #
+# Script by Allen Carson.                                                                                                                     #
 # https://github.com/allenc125789/TCCR-OBS-ScreenDeck                                                                                         #
 #                                                                                                                                             #
 # SELF NOTE: The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.                             #
@@ -35,6 +35,7 @@ statusLive = False
 sourceCAM1 = False
 sourceTimer = False
 sourceTimerStart = False
+sourceRoundCount = False
 
 ###Functions
 def disableEvent():
@@ -49,6 +50,8 @@ def resetSysVars():
     cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=False)
     sourceTimerStart = False
     cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=False)
+    #transitionScene
+    cl.set_scene_item_enabled(scene_name="Main", item_id=35, enabled=False)
 
 #Starts the livestream, sets as online.
 def startStream():
@@ -77,12 +80,14 @@ def stopStream():
 
 #Set scene to 'Stand-By'
 def standBy():
+    transitionScene()
     cl = obs.ReqClient()
     cl.set_current_program_scene("Stand-By")
 
 #Set scene to 'Main', activates group 'CAM1'.
 def CAM1():
     cl = obs.ReqClient()
+    transitionScene()
     #CAM1
     cl.set_current_program_scene("Main")
     cl.set_scene_item_enabled(scene_name="Main", item_id=29, enabled=True)
@@ -101,7 +106,6 @@ def timerHideShow():
     sourceTimer = (not sourceTimer)
     cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=sourceTimer)
 
-#Set scene to 'Main', activates group 'Timer-Start'.
 def timerStart():
     global sourceTimer
     global sourceTimerStart
@@ -115,6 +119,20 @@ def timerStart():
     sourceTimerStart = (not sourceTimerStart)
     cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=sourceTimerStart)
 
+#Set scene to 'Main', activates group 'Timer-Start'.
+def roundcountHideShow():
+    global sourceRoundCount
+    cl = obs.ReqClient()
+    sourceRoundCount = (not sourceRoundCount)
+    cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=sourceRoundCount)
+
+
+def transitionScene():
+    cl = obs.ReqClient()
+    cl.set_current_program_scene("Main")
+    cl.set_scene_item_enabled(scene_name="Main", item_id=35, enabled=True)
+    time.sleep(1)
+    cl.set_scene_item_enabled(scene_name="Main", item_id=35, enabled=False)
 
 #Resets the title textbox to what's saved in the file. If none is there, one will be created.
 def resetTitle():
@@ -125,11 +143,11 @@ def resetTitle():
         f = open("title.txt", "r")
         titleText = f.read()
         tbTitle.delete("1.0", tk.END)
-        WbTitle.insert("1.0", titleText)
+        tbTitle.insert("1.0", titleText)
         f.close
     except:
         with open("title.txt", "w") as f:
-            titleText = "           TCC, Tulsa Community College Robotics            |            Event: XXXXX: 04-08-2025             |            "
+            titleText = "           TCC, Tulsa Community Combat Robotics            |            Event: XXXXX: 04-08-2025             |            "
             f.write(titleText)
             tbTitle.insert("1.0", titleText)
             pass
@@ -269,13 +287,19 @@ def tkrender():
     fTimer = tk.Frame(fColumn, width=228, height=50, borderwidth=2, relief="solid")
     fTimer.grid(row=0, column=1, sticky=tk.W+tk.E)
     lTimer = tk.Label(fTimer, text="+Battle Timer+", font=("Aerial", 10, "bold"))
-    btnShowHide = tk.Button(fTimer, text='Hide/Show', command=timerHideShow)
+    btnShowHide = tk.Button(fTimer, text='Toggle', command=timerHideShow)
     btnStopStart = tk.Button(fTimer, text='Start/Stop', command=timerStart)
+
+    #Buttons for Round Count.
+    froundcount = tk.Frame(fColumn, width=228, height=50, borderwidth=2, relief="solid")
+    froundcount.grid(row=1, column=1, sticky=tk.W+tk.E)
+    lroundcount = tk.Label(froundcount, text="+Round-Count+", font=("Aerial", 10, "bold"))
+    btnRCToggle = tk.Button(froundcount, text='Toggle', command=roundcountHideShow)
 
 
     #Button for safe exit.
     btnSafeExit = tk.Button(fColumn, text='Safe Exit', font=("Aerial", 10, "bold"), command=tkrenderWarning)
-    btnSafeExit.grid(row=23, column=1, sticky=tk.W+tk.E)
+    btnSafeExit.grid(row=8, column=1, sticky=tk.W+tk.E)
 
     ###Packing/rendering into main window.
     #Online/Offline Function.
@@ -290,6 +314,10 @@ def tkrender():
     lTimer.pack()
     btnShowHide.pack()
     btnStopStart.pack()
+
+    #Round Count Function.
+    lroundcount.pack()
+    btnRCToggle.pack()
 
     #Title Function.
     btnTitleReset.pack(side="left")
