@@ -16,8 +16,10 @@ This script has 2 main benefits:
 
 ## ToDo:
 
-+ Add a match/round counter, one that has 2 buttons, for making the round go up or down, then a third button to hide/show it.
++ ~~Add a match/round counter, one that has 2 buttons, for making the round go up or down, then a third button to hide/show it.~~
 
 + Add a name vs name section, with a red and blue bar background, for the bots battling. make a little red and blue pixel bot to put on the either side of it.
 
-+ add transition between cams
++ ~~add transition between cams~~
+
++ Add a webserver function to control starting the round, and activating a sfx for a bell.
