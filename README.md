@@ -12,7 +12,7 @@ This script has 2 main benefits:
 
 ## Dependancies:
 + obsws (https://pypi.org/project/obsws-python/)
-+ **[Only needed for Linux]** gopro_as_webcam_on_linux (https://github.com/jschmid1/)
++ gopro_as_webcam_on_linux (https://github.com/jschmid1/)**[Only needed for Linux]**
 
 ## ToDo:
 
