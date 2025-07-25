@@ -19,6 +19,9 @@ Libraries:
 
 [obsws](https://pypi.org/project/obsws-python/)
 
+## Setup:
+Refer to README.txt, located in the file TCCR_OBS_Resources.zip, found in the TCCR Club's socialmedia gmail/gdrive...
+
 ## ToDo:
 
 + ~~Add a match/round counter, one that has 2 buttons, for making the round go up or down, then a third button to hide/show it.~~
