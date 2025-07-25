@@ -14,13 +14,10 @@ import obsws_python as obs
 ###############################################################################################################################################
 
 ###Prepare
-#For Linux Systems. Calls the program "gopro_as_webcam_on_linux" by jschmid1.
-#https://github.com/jschmid1/gopro_as_webcam_on_linux
-goprogram = subprocess.Popen(['/usr/bin/sudo', '/usr/local/sbin/gopro', 'webcam', '-p', 'enx', '-n', '-a'])
 #Waits for cameras to connect...
 time.sleep(16)
 #Starts OBS.
-obsprogram = subprocess.Popen(['/usr/bin/obs', '>', '/dev/null'])
+obsprogram = subprocess.Popen(['C:\Program Files\obs-studio\bin\64bit\obs64.exe'])
 
 ##Sys vars, don't change.
 #tkinter
@@ -169,18 +166,6 @@ def safeExit():
     obsprogram.terminate()
     obsprogram.wait()
     obsprogram.kill()
-    #Stops gopro
-    goprogram.terminate()
-    goprogram.wait()
-    goprogram.kill()
-    #Restarts gopro and ends it again.
-    #Fixes bug where gopro continues in webcam mode, despite exiting the program.
-    time.sleep(2)
-    goprogram2 = subprocess.Popen(['/usr/bin/sudo', '/usr/local/sbin/gopro', 'webcam', '-p', 'enx', '-n', '-a'])
-    time.sleep(4)
-    goprogram2.terminate()
-    goprogram2.wait()
-    goprogram2.kill()
     #Stops tkinter
     root.quit()
 
