@@ -16,6 +16,7 @@ Software:
 [OBS-Studio](https://obsproject.com/download), [GoPro Webcam](https://community.gopro.com/s/article/GoPro-Webcam?language=en_US#gettingstartedwithwindows)
 
 Libraries:
+
 [obsws](https://pypi.org/project/obsws-python/)
 
 ## ToDo:
