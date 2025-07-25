@@ -12,6 +12,7 @@ This script has 2 main benefits:
 
 ## Dependancies:
 Software:
+
 [OBS-Studio](https://obsproject.com/download)
 [GoPro Webcam](https://community.gopro.com/s/article/GoPro-Webcam?language=en_US#gettingstartedwithwindows)
 
