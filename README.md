@@ -20,7 +20,7 @@ Libraries:
 [obsws](https://pypi.org/project/obsws-python/)
 
 ## Setup:
-Refer to README.txt, located in the file TCCR_OBS_Resources.zip, found in the TCCR Club's socialmedia gmail/gdrive...
+Refer to the README.md, located in the file TCCR_OBS_Resources.zip, found in the TCCR Club's socialmedia gmail/gdrive...
 
 ## ToDo:
 
