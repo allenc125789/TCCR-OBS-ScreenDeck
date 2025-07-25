@@ -1,5 +1,5 @@
 > [!NOTE]
-> **Archive Branch**. I'm up to my neck with compatibility tricks and hacks, so I'm going ahead and converting the program to 100% Windows... I am the only club member currently using linux, so the plan was to make it Windows compatible at the end of the day anyways.
+> **Archive Branch**. I'm up to my neck with compatibility tricks and hacks, so from this point forward, the program will be ONLY Windows compatible... I am the only club member currently using linux, so the plan was to make it Windows compatible at the end of the day anyways.
 
 ## Description
 
