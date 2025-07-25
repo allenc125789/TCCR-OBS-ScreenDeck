@@ -11,7 +11,12 @@ This script has 2 main benefits:
 + Very easy to control for someone new to OBS or doesn't know my specific scene setup.
 
 ## Dependancies:
-+ obsws (https://pypi.org/project/obsws-python/)
+Software:
+[OBS-Studio](https://obsproject.com/download)
+[GoPro Webcam](https://community.gopro.com/s/article/GoPro-Webcam?language=en_US#gettingstartedwithwindows)
+
+Libraries:
++ [obsws](https://pypi.org/project/obsws-python/)
 
 ## ToDo:
 
