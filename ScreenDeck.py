@@ -1,4 +1,5 @@
 import os
+import sys
 import tkinter as tk
 import subprocess
 import time
@@ -13,11 +14,16 @@ import obsws_python as obs
 #     Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.#
 ###############################################################################################################################################
 
+cwd = os.getcwd()
+obsdir = 'C:\\Program Files\\obs-studio\\bin\\64bit\\'
+
 ###Prepare
 #Waits for cameras to connect...
-time.sleep(16)
 #Starts OBS.
-obsprogram = subprocess.Popen(['C:\Program Files\obs-studio\bin\64bit\obs64.exe'])
+os.chdir(obsdir)
+obsprogram = subprocess.Popen([obsdir + 'obs64.exe'])
+os.chdir(cwd)
+time.sleep(5)
 
 ##Sys vars, don't change.
 #tkinter
@@ -221,8 +227,8 @@ def tkrender():
     ws = root.winfo_screenwidth() # width of the screen
     hs = root.winfo_screenheight() # height of the screen
 
-    x = (ws) - (w*4)
-    y = (hs) - (h/4)
+    x = (ws) - (w*2)
+    y = (hs) - (h)
 
     # set the dimensions of the screen
     # and where it is placed
@@ -230,6 +236,7 @@ def tkrender():
     #Frame for Column
     fColumn.columnconfigure(0, weight=1)
     fColumn.columnconfigure(1, weight=1)
+    root.attributes('-topmost', True)
 
     var1=tk.IntVar()
 
