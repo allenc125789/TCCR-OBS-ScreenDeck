@@ -28,6 +28,8 @@ Refer to the README.md, located in the file TCCR_OBS_Resources.zip, found in the
 
 + Add a name vs name section, with a red and blue bar background, for the bots battling. make a little red and blue pixel bot to put on the either side of it.
 
++ add loop to wait for obs to launch. (if its delayed by a popup, itll poop out an error)
+
 + ~~add transition between cams~~
 
 + Add a webserver function to control starting the round, and activating a sfx for a bell.
