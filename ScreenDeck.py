@@ -5,6 +5,7 @@ import subprocess
 import time
 import tomllib as toml
 import obsws_python as obs
+import json
 
 ##############################################################################################################################################
 # Script by Allen Carson.                                                                                                                     
@@ -14,6 +15,11 @@ import obsws_python as obs
 #     Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.
 ##############################################################################################################################################
 
+#Sets up Null for errors.
+#original_stderr = sys.stderr
+#sys.stderr = open(os.devnull, 'w')
+
+#Declares Paths
 cwd = os.getcwd()
 obsdir = 'C:\\Program Files\\obs-studio\\bin\\64bit\\'
 
@@ -48,7 +54,8 @@ sourceCAM1 = False
 sourceTimer = False
 sourceTimerStart = False
 sourceRoundCount = False
-#HTTP Server
+
+#battleTimerStop = {"op": 6, "d": {"requestId": "test", "requestType": "CallVendorRequest", "requestData": {"vendorName": "ashmanix-countdown-timer", "requestType": "play_all"}}}
 
 ###Functions
 def disableEvent():
@@ -136,11 +143,14 @@ def timerHideShow():
 def timerStart():
     global sourceTimer
     global sourceTimerStart
+    global battleTimerStop
     cl = obs.ReqClient()
     if (sourceTimer != True):
         #Timer
         sourceTimer = True
         cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=True)
+        resp = cl.call_vendor_request("ashmanix-countdown-timer", "play_all", request_data=None)
+        print(f"response data: {resp}")
         time.sleep(1)
     #TimerStart
     sourceTimerStart = (not sourceTimerStart)
@@ -219,9 +229,7 @@ def saveTitle():
 #Performs a safe exit, that terminates all child services.
 def safeExit():
     #Stops obs
-    obsprogram.terminate()
-    obsprogram.wait()
-    obsprogram.kill()
+    os.system("taskkill /f /im obs64.exe")
     #Stops tkinter
     root.quit()
 
@@ -383,9 +391,17 @@ def tkrender():
 
 #Main Loop
 def main():
-    time.sleep(2)
-    resetSysVars()
-    tkrender()
+    start = False
+    while start == False:
+        try:
+            resetSysVars()
+            tkrender()
+            start = True
+        except Exception as e:
+            time.sleep(5)
+            pass
+
+
 
 if __name__ == "__main__":
     main()
