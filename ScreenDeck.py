@@ -39,6 +39,8 @@ rootWarn.destroy()
 fColumn = tk.Frame(root)
 fColumn.configure(background="#c4c4c4")
 tbTitle = tk.Text(fColumn, height=3, width=60)
+tbFighterOne = tk.Text(fColumn, height=1, width=10)
+tbFighterTwo = tk.Text(fColumn, height=1, width=10)
 #Prepare Round Counter
 tbRoundCount = tk.Text(fColumn, height=1, width=3)
 currentRound = 1
@@ -131,11 +133,13 @@ def timerHideShow():
     global sourceTimer
     global sourceTimerStart
     cl = obs.ReqClient()
+    #TimerStart
+    cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=False)
     if (sourceTimerStart == True):
-        #TimerStart
-        sourceTimerStart = False
-        cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=False)
         time.sleep(1)
+    resp = cl.call_vendor_request("ashmanix-countdown-timer", "period_pause", request_data=None)
+    resp = cl.call_vendor_request("ashmanix-countdown-timer", "period_set", request_data=None)
+    sourceTimerStart = False
     #Timer
     sourceTimer = (not sourceTimer)
     cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=sourceTimer)
@@ -149,12 +153,18 @@ def timerStart():
         #Timer
         sourceTimer = True
         cl.set_scene_item_enabled(scene_name="Main", item_id=8, enabled=True)
-        resp = cl.call_vendor_request("ashmanix-countdown-timer", "play_all", request_data=None)
-        print(f"response data: {resp}")
         time.sleep(1)
+    if (sourceTimerStart == True):
+        resp = cl.call_vendor_request("ashmanix-countdown-timer", "period_pause", request_data=None)
+        print(f"response data: {resp}")
+    else:
+        resp = cl.call_vendor_request("ashmanix-countdown-timer", "period_play", request_data=None)
+        print(f"response data: {resp}")
     #TimerStart
     sourceTimerStart = (not sourceTimerStart)
     cl.set_scene_item_enabled(scene_name="Main", item_id=6, enabled=sourceTimerStart)
+
+
 
 #Set scene to 'Main', activates group 'Timer-Start'.
 def roundcountHideShow():
@@ -278,6 +288,8 @@ def tkrender():
     global root
     global fColumn
     global tbTitle
+    global tbFighterOne
+    global tbFighterTwo
     root.protocol("WM_DELETE_WINDOW", disableEvent)
     root.title('TCCR OBS ScreenDeck')
     w = 775
@@ -357,10 +369,17 @@ def tkrender():
     btnRCup = tk.Button(froundcount, text='+', command=roundUP)
     btnRCdown = tk.Button(froundcount, text='-', command=roundDOWN)
 
-    btnRCdown.grid(row=1, column=0, sticky="W")
-    btnRCToggle.grid(row=1, column=1, sticky="W")
-    btnRCup.grid(row=1, column=2, sticky="W")
+    btnRCdown.grid(row=1, column=0, sticky=tk.W+tk.E)
+    btnRCToggle.grid(row=1, column=1, sticky=tk.W+tk.E)
+    btnRCup.grid(row=1, column=2, sticky=tk.W+tk.E)
     tbRoundCount.grid(row=2, column=1, sticky=tk.W+tk.E)
+    
+    #Competitor TextBox
+    tbFighterOne.grid(row=4, column=1, sticky=tk.W+tk.E)
+    btnVS = tk.Button(fColumn, text='VS', font=("Aerial", 10, "bold"))
+    btnVS.grid(row=5, column=1, sticky=tk.W+tk.E)
+    tbFighterTwo.grid(row=6, column=1, sticky=tk.W+tk.E)
+    
 
     #Button for safe exit.
     btnSafeExit = tk.Button(fColumn, text='Safe Exit', font=("Aerial", 10, "bold"), command=tkrenderWarning)
