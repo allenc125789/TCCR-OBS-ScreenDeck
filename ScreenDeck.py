@@ -9,7 +9,9 @@ import json
 
 ##############################################################################################################################################
 # Script by Allen Carson.                                                                                                                     
-# https://github.com/allenc125789/TCCR-OBS-ScreenDeck                                                                                         
+# https://github.com/allenc125789/TCCR-OBS-ScreenDeck
+#
+# IMPORTANT: To run this script, you need the TCCR-OBS-ScreenDeck.zip file. Located in the TCCR Social Media G-Drive.                                                                                         
 #                                                                                                                                             
 # SELF NOTE: The module to get item id's in obsws doesnt seem to have an ouput, or atleast I can't figure it out.                             
 #     Another way to find item id's in OBS is to export the scene.json file (if not already there) and search it for 'id:'. it'll be a number.
