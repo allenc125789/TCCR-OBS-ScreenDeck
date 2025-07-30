@@ -41,8 +41,8 @@ rootWarn.destroy()
 fColumn = tk.Frame(root)
 fColumn.configure(background="#c4c4c4")
 tbTitle = tk.Text(fColumn, height=3, width=60)
-tbFighterOne = tk.Text(fColumn, height=1, width=10)
-tbFighterTwo = tk.Text(fColumn, height=1, width=10)
+tbFighterOne = tk.Text(fColumn, height=1, width=3)
+tbFighterTwo = tk.Text(fColumn, height=1, width=3)
 #Prepare Round Counter
 tbRoundCount = tk.Text(fColumn, height=1, width=3)
 currentRound = 1
@@ -176,11 +176,11 @@ def roundcountHideShow():
     sourceRoundCount = (not sourceRoundCount)
     if (sourceRoundCount == True):
         cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=sourceRoundCount)
-        time.sleep(3)
+        time.sleep(2)
         cl.set_scene_item_enabled(scene_name="Main", item_id=51, enabled=sourceRoundCount)
     else:
         cl.set_scene_item_enabled(scene_name="Main", item_id=51, enabled=sourceRoundCount)
-        time.sleep(3)
+        time.sleep(2)
         cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=sourceRoundCount)
 
 def roundUP():
@@ -280,14 +280,14 @@ def tkrenderWarning():
         rootWarn = tk.Toplevel(root)
         rootWarn.protocol("WM_DELETE_WINDOW", disableEvent)
         rootWarn.title('WARNING!')
-        w = 775
-        h = 375
+        w = 695
+        h = 335
 
         ws = rootWarn.winfo_screenwidth() # width of the screen
         hs = rootWarn.winfo_screenheight() # height of the screen
 
-        x = (ws) - (w*2)
-        y = (hs) - (h/1)
+        x = ws - w*2
+        y = hs - h
 
         rootWarn.attributes('-topmost', True)
         rootWarn.geometry('%dx%d+%d+%d' % (w, h, x, y))
@@ -314,14 +314,14 @@ def tkrender():
     global tbFighterTwo
     root.protocol("WM_DELETE_WINDOW", disableEvent)
     root.title('TCCR OBS ScreenDeck')
-    w = 775
-    h = 375
+    w = 695
+    h = 335
 
     ws = root.winfo_screenwidth() # width of the screen
     hs = root.winfo_screenheight() # height of the screen
 
-    x = (ws) - (w*2)
-    y = (hs) - (h/1)
+    x = ws - w*2
+    y = hs - h
 
     # set the dimensions of the screen
     # and where it is placed
@@ -441,6 +441,7 @@ def main():
         except Exception as e:
             time.sleep(5)
             pass
+    
 
 
 
