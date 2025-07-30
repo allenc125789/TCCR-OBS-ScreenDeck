@@ -58,6 +58,7 @@ sourceCAM1 = False
 sourceTimer = False
 sourceTimerStart = False
 sourceRoundCount = False
+enabledSponsors = False
 
 
 ###Functions
@@ -78,6 +79,8 @@ def resetSysVars():
     #Round-Count
     cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=False)
     cl.set_scene_item_enabled(scene_name="Main", item_id=51, enabled=False)
+    cl.set_scene_item_enabled(scene_name="Stand-By", item_id=8, enabled=False)
+
 
 
 #Starts the livestream, sets as online.
@@ -271,6 +274,18 @@ def closeWarning():
     rootWarn.destroy()
     safeExit()
 
+
+def toggleSponsors():
+    global enabledSponsors
+    cl = obs.ReqClient()
+    if (enabledSponsors == False):
+        enabledSponsors = True
+        cl.set_scene_item_enabled(scene_name="Stand-By", item_id=8, enabled=enabledSponsors)
+    else:
+        enabledSponsors = False
+        cl.set_scene_item_enabled(scene_name="Stand-By", item_id=8, enabled=enabledSponsors)
+
+
 #Renders warning window for closing the program while the livestream is online.
 def tkrenderWarning():
     global root
@@ -396,6 +411,11 @@ def tkrender():
     btnRCup.grid(row=1, column=2, sticky=tk.W+tk.E)
     tbRoundCount.grid(row=2, column=1, sticky=tk.W+tk.E)
     
+    #Button for sponsors to appear in Stand-By.
+    btnSponsors = tk.Button(fColumn, text='Sponsors', command=toggleSponsors)
+    btnSponsors.grid(row=3, column=1)
+
+    
     #Competitor TextBox
     tbFighterOne.grid(row=4, column=1, sticky=tk.W+tk.E)
     btnVS = tk.Button(fColumn, text='VS', font=("Aerial", 10, "bold"), command=saveFighters)
@@ -426,7 +446,6 @@ def tkrender():
     btnTitleReset.pack(side="left")
     btnTitleSave.pack(side="left")
 
-
     #Start root GUI window.
     root.mainloop()
 
@@ -441,6 +460,7 @@ def main():
         except Exception as e:
             time.sleep(5)
             pass
+    
     
 
 
