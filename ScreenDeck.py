@@ -57,7 +57,6 @@ sourceTimer = False
 sourceTimerStart = False
 sourceRoundCount = False
 
-#battleTimerStop = {"op": 6, "d": {"requestId": "test", "requestType": "CallVendorRequest", "requestData": {"vendorName": "ashmanix-countdown-timer", "requestType": "play_all"}}}
 
 ###Functions
 def disableEvent():
@@ -76,6 +75,8 @@ def resetSysVars():
     cl.set_scene_item_enabled(scene_name="Main", item_id=35, enabled=False)
     #Round-Count
     cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=False)
+    cl.set_scene_item_enabled(scene_name="Main", item_id=51, enabled=False)
+
 
 #Starts the livestream, sets as online.
 def startStream():
@@ -171,7 +172,14 @@ def roundcountHideShow():
     global sourceRoundCount
     cl = obs.ReqClient()
     sourceRoundCount = (not sourceRoundCount)
-    cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=sourceRoundCount)
+    if (sourceRoundCount == True):
+        cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=sourceRoundCount)
+        time.sleep(3)
+        cl.set_scene_item_enabled(scene_name="Main", item_id=51, enabled=sourceRoundCount)
+    else:
+        cl.set_scene_item_enabled(scene_name="Main", item_id=51, enabled=sourceRoundCount)
+        time.sleep(3)
+        cl.set_scene_item_enabled(scene_name="Main", item_id=32, enabled=sourceRoundCount)
 
 def roundUP():
     global tbRoundCount
@@ -235,6 +243,18 @@ def saveTitle():
         f.write(titleText)
         f.close
 
+def saveFighters():
+    global fColumn
+    global tbFighterOne
+    global tbFighterTwo
+    fighterOneText = tbFighterOne.get("1.0", tk.END)
+    fighterTwoText = tbFighterTwo.get("1.0", tk.END)
+    with open("fighterOne.txt", "w") as f:
+        f.write(fighterOneText)
+        f.close
+    with open("fighterTwo.txt", "w") as f:
+        f.write(fighterTwoText)
+        f.close
 
 #Performs a safe exit, that terminates all child services.
 def safeExit():
@@ -376,7 +396,7 @@ def tkrender():
     
     #Competitor TextBox
     tbFighterOne.grid(row=4, column=1, sticky=tk.W+tk.E)
-    btnVS = tk.Button(fColumn, text='VS', font=("Aerial", 10, "bold"))
+    btnVS = tk.Button(fColumn, text='VS', font=("Aerial", 10, "bold"), command=saveFighters)
     btnVS.grid(row=5, column=1, sticky=tk.W+tk.E)
     tbFighterTwo.grid(row=6, column=1, sticky=tk.W+tk.E)
     
